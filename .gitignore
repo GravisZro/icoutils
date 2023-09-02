@@ -1,11 +1,13 @@
 *~
 *.o
 *.a
-
+m4/
+lib/
+build-aux/
+build/
 .deps
 Makefile
 Makefile.in
-
 /aclocal.m4
 /autom4te.cache
 /config.h

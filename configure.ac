@@ -1,16 +1,16 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.59)
-AC_INIT(icoutils, 0.32.3, frank.richter@gmail.com)
+AC_PREREQ([2.71])
+AC_INIT([icoutils],[0.32.3],[frank.richter@gmail.com])
 AC_CONFIG_MACRO_DIR([m4]) # doesn't seem to have any effect at the moment
 AC_CONFIG_SRCDIR([icotool/icotool.h])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 
 # Stuff for the config.h.in file
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 #AH_TEMPLATE([PKGUSERDIR], [User directory for program files])
 
 # Checks for programs.
@@ -42,16 +42,16 @@ fi
 # $nw is the list of warnings we want to *disable*.  The nw warnings
 # are complemented below.
 nw=
-nw="$nw -Wvla"                    # Allow variable length arrays.
-nw="$nw -Wsuggest-attribute=pure" # Don't suggest function attributes.
-nw="$nw -Wsuggest-attribute=const"
-nw="$nw -Wsuggest-attribute=format"
-nw="$nw -Wstrict-prototypes"      # Don't require prototypes for every function.
-nw="$nw -Wmissing-prototypes"
-nw="$nw -Wmissing-declarations"
-nw="$nw -Wpacked"                 # Don't warn about packed structs.
-nw="$nw -Wswitch-default"         # This warning is actively dangerous.
-nw="$nw -Wunused-macros"          # Don't warn about defined but unused macros.
+#nw="$nw -Wvla"                    # Allow variable length arrays.
+#nw="$nw -Wsuggest-attribute=pure" # Don't suggest function attributes.
+#nw="$nw -Wsuggest-attribute=const"
+#nw="$nw -Wsuggest-attribute=format"
+#nw="$nw -Wstrict-prototypes"      # Don't require prototypes for every function.
+#nw="$nw -Wmissing-prototypes"
+#nw="$nw -Wmissing-declarations"
+#nw="$nw -Wpacked"                 # Don't warn about packed structs.
+#nw="$nw -Wswitch-default"         # This warning is actively dangerous.
+#nw="$nw -Wunused-macros"          # Don't warn about defined but unused macros.
 
 gl_MANYWARN_ALL_GCC([ws])
 gl_MANYWARN_COMPLEMENT([ws], [$ws], $[nw])
@@ -74,10 +74,31 @@ AM_GNU_GETTEXT([external])
 # AM_GNU_GETTEXT_VERSION(0.14.1)
 
 # Checks for header files.
-AC_HEADER_STDC
+m4_warn([obsolete],
+[The preprocessor macro `STDC_HEADERS' is obsolete.
+  Except in unusual embedded environments, you can safely include all
+  ISO C90 headers unconditionally.])dnl
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_HEADER_DIRENT
 AC_HEADER_SYS_WAIT
-AC_HEADER_TIME
+m4_warn([obsolete],
+[Update your code to rely only on HAVE_SYS_TIME_H,
+then remove this warning and the obsolete code below it.
+All current systems provide time.h; it need not be checked for.
+Not all systems provide sys/time.h, but those that do, all allow
+you to include it and time.h simultaneously.])dnl
+AC_CHECK_HEADERS_ONCE([sys/time.h])
+# Obsolete code to be removed.
+if test $ac_cv_header_sys_time_h = yes; then
+  AC_DEFINE([TIME_WITH_SYS_TIME],[1],[Define to 1 if you can safely include both <sys/time.h>
+	     and <time.h>.  This macro is obsolete.])
+fi
+# End of obsolete code.
+
 #AC_CHECK_HEADERS([byteswap.h errno.h fcntl.h getopt.h limits.h sys/stat.h sys/time.h sys/types.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
